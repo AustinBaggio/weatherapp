@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:weatherapp/services/locations.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:weatherapp/screens/location_screen.dart';
+import 'package:weatherapp/services/weather.dart';
+
+
 
 class LoadingScreen extends StatefulWidget {
   @override
@@ -8,15 +12,18 @@ class LoadingScreen extends StatefulWidget {
 
 class _LoadingScreenState extends State<LoadingScreen> {
 
-  void getLocation() async {
-    Location coordinates = Location();
-    await coordinates.getCurrentLocation();
-    print("lat: ${coordinates.latitude} long: ${coordinates.longitude}");
-  }
+  void getLocationData() async {
+   
+    var weatherData = await WeatherModel().getLocationWeather();
+
+    Navigator.push(context, MaterialPageRoute(builder: (context){
+      return LocationScreen(weatherData);
+    }));
+    }
 
   @override
   void initState() {
-    getLocation();
+    getLocationData();
     super.initState();
   }
 
@@ -24,11 +31,15 @@ class _LoadingScreenState extends State<LoadingScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: RaisedButton(
-          onPressed: () {},
-          child: Text('Location'),
-        ),
+        child: SpinKitWave(color: Colors.white,size: 100,),
       ),
     );
   }
 }
+
+
+
+    // double temperature = decodedData['main']['temp'];
+    // int condition = decodedData['weather'][0]['id'];
+    // String cityName = decodedData['name'];
+    
